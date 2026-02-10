@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "figma": {
+      "command": "bunx",
+      "args": ["claude-talk-to-figma-mcp@latest"],
+      "description": "Figma design tools - create, modify, annotate designs"
+    },
+    "atlassian": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-atlassian"],
+      "env": {
+        "ATLASSIAN_URL": "${ATLASSIAN_URL}",
+        "ATLASSIAN_EMAIL": "${ATLASSIAN_EMAIL}",
+        "ATLASSIAN_API_TOKEN": "${ATLASSIAN_API_TOKEN}"
+      },
+      "description": "Jira & Confluence - tickets, specs, documentation"
+    }
+  },
+  "notes": {
+    "figma": "Requires WebSocket server running: cd ~/clawd/research/figma-mcp/claude-figma && bun socket",
+    "atlassian": "Set env vars or create .env file with ATLASSIAN_URL, ATLASSIAN_EMAIL, ATLASSIAN_API_TOKEN"
+  }
+}
