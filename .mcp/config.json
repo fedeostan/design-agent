@@ -1,10 +1,5 @@
 {
   "mcpServers": {
-    "figma": {
-      "command": "bunx",
-      "args": ["claude-talk-to-figma-mcp@latest"],
-      "description": "Figma design tools - create, modify, annotate designs"
-    },
     "atlassian": {
       "command": "npx",
       "args": ["@anthropic-ai/mcp-atlassian"],
@@ -13,11 +8,15 @@
         "ATLASSIAN_EMAIL": "${ATLASSIAN_EMAIL}",
         "ATLASSIAN_API_TOKEN": "${ATLASSIAN_API_TOKEN}"
       },
-      "description": "Jira & Confluence - tickets, specs, documentation"
+      "description": "Jira & Confluence (when configured)"
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer ${NOTION_API_TOKEN}\", \"Notion-Version\": \"2022-06-28\"}"
+      },
+      "description": "Notion pages & databases (when configured)"
     }
-  },
-  "notes": {
-    "figma": "Requires WebSocket server running: cd ~/clawd/research/figma-mcp/claude-figma && bun socket",
-    "atlassian": "Set env vars or create .env file with ATLASSIAN_URL, ATLASSIAN_EMAIL, ATLASSIAN_API_TOKEN"
   }
 }

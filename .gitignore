@@ -19,3 +19,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local MCP server (cloned dependency)
+claude-talk-to-figma-mcp/
