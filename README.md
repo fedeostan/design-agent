@@ -36,10 +36,10 @@ design-agent/
 ├── CLAUDE.md           # Agent instructions (Claude reads this)
 ├── .mcp/
 │   └── config.json     # MCP server configurations
-├── skills/
-│   └── figma/          # Figma-specific skills
-│       ├── prompts/    # Design constraints & rules
-│       └── components/ # Component specs
+├── .claude/
+│   ├── agents/         # Specialized subagents (PM, Research, UX, UI, SA)
+│   ├── skills/         # Skills (figma, research, requirements, handoff, quality-gates)
+│   └── team.md         # UX + UI debate team
 ├── scripts/
 │   ├── setup.sh        # Initial setup
 │   └── start-figma.sh  # Start WebSocket server
@@ -68,13 +68,13 @@ design-agent/
 ## Customization
 
 ### Add Your Design System
-Edit `skills/figma/prompts/design-system-constraints.md`
+Edit `.claude/skills/figma/prompts/design-system-constraints.md`
 
 ### Add Note Types
-Edit `skills/figma/prompts/annotation-style.md`
+Edit `.claude/skills/figma/prompts/annotation-style.md`
 
 ### Change Flow Style
-Edit `skills/figma/prompts/flow-style.md`
+Edit `.claude/skills/figma/prompts/flow-style.md`
 
 ---
 
