@@ -14,13 +14,16 @@ Orchestrate Figma design creation via Claude CLI with the official Figma MCP ser
 Claude CLI
   ├── Figma MCP (official)     → Remote or Desktop mode
   │     Remote: mcp.figma.com (read-only, OAuth)
-  │     Desktop: localhost:3845 (read/write, requires Figma Desktop)
+  │     Desktop: localhost:3845 (read + Code to Canvas write, requires Figma Desktop)
   │
-  │     Capabilities:
+  │     Read capabilities:
   │     - Screenshots, metadata, design context
-  │     - Variables, Code Connect
-  │     - Create/edit frames, components, text, styling
-  │     - Auto-layout, export
+  │     - Variables, Code Connect, node structure
+  │
+  │     Write capabilities:
+  │     - generate_figma_design (Code to Canvas — HTML → Figma frames)
+  │     - Code Connect mappings
+  │     - NO granular write tools (no create_frame, rename_node, etc.)
   │
   ├── Atlassian MCP            → Jira & Confluence
   └── Asana MCP                → Task management
@@ -121,26 +124,30 @@ claude mcp add asana -- npx @anthropic-ai/mcp-asana
 | `generate_diagram` | Create FigJam diagrams from Mermaid |
 | `get_figjam` | Read FigJam boards |
 
-**Write Operations** (desktop mode only):
+**Write Operations — Code to Canvas** (desktop mode only):
+
+> **Important:** The Figma MCP has NO granular write tools. Tools like `create_frame`, `rename_node`, `set_auto_layout`, etc. **do not exist** in the MCP. The only way to push designs into Figma is via `generate_figma_design`.
+
 | Tool | Purpose |
 |------|---------|
-| `create_frame` | Create new frames |
-| `create_component_instance` | Instantiate components |
-| `create_text` | Create text nodes |
-| `create_rectangle` / `create_ellipse` / `create_polygon` / `create_star` | Create shapes |
-| `create_component_from_node` | Convert node to component |
-| `set_auto_layout` | Configure auto-layout |
-| `set_fill_color` / `set_stroke_color` | Set colors |
-| `set_effects` / `set_corner_radius` | Set styling |
-| `set_text_content` / `set_font_size` / `set_font_name` / `set_font_weight` | Edit text |
-| `move_node` / `resize_node` / `clone_node` / `delete_node` | Manipulate nodes |
-| `insert_child` / `group_nodes` / `ungroup_nodes` | Manage hierarchy |
-| `rename_node` | Rename nodes |
-| `export_node_as_image` | Export assets |
+| `generate_figma_design` | Convert HTML/CSS to Figma frames (Code to Canvas) |
 | `add_code_connect_map` | Add Code Connect mapping |
 | `send_code_connect_mappings` | Publish Code Connect mappings |
 
-**Note:** Exact tool names may vary. Use MCP introspection to discover available tools.
+**How Code to Canvas works:**
+1. Create a flat HTML file with inline styles representing the design
+2. Include the Figma capture script: `<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>`
+3. Serve the HTML locally and open with the capture URL
+4. Figma converts the rendered HTML into native Figma frames
+
+**Best practices for clean output:**
+- Keep DOM flat — max 3 levels of nesting
+- Use semantic class names (they become Figma layer names)
+- Use inline styles or `<style>` blocks, not external CSS
+- Set a fixed viewport (`width=390` for mobile)
+- Never capture directly from framework apps (React, Next.js) — the DOM wrappers create 10+ nesting levels
+
+See: `prompts/code-to-canvas-workflow.md` for the full workflow.
 
 ## Custom Constraints
 

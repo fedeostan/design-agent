@@ -14,7 +14,7 @@ You are working with Fede's design system. Follow these rules strictly.
 ### Before Creating Anything
 1. Run `get_local_components` (via Figma MCP) to see available components
 2. Check if a component already exists for what you need
-3. Use `create_component_instance` (via Figma MCP) instead of raw shapes
+3. When using Code-to-Canvas: capture produces raw frames — swap to component instances manually in Figma UI after capture (see Phase 3 of code-to-canvas-workflow.md)
 
 ### Finding Components
 ```
