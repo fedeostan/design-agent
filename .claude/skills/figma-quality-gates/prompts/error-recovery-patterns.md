@@ -425,8 +425,7 @@ get_metadata(nodeId: "123:456", fileKey: "abc...")
 get_design_context(nodeId: "123:456", fileKey: "abc...")
 
 # Writing designs (desktop mode):
-create_frame(...)
-create_component_instance(...)
+generate_figma_design(...)  # Code to Canvas — only write tool available
 ```
 
 **Authentication Check:**
@@ -483,6 +482,49 @@ If stuck:
 
 ---
 
+## Pattern 9: Code-to-Canvas Messy Structure
+
+**Symptoms:**
+- 10+ nesting levels in captured Figma frame
+- All layers named "Container", "View", or CSS hash names (`.css-1a2b3c`)
+- Wrong frame dimensions (not matching intended viewport)
+- Hidden/phantom artifacts from browser extensions or framework wrappers
+- Layer tree is unmanageable — can't find or edit specific elements
+
+**Root Cause:** Capturing directly from a framework app (React, React Native Web, Next.js, etc.). The framework's DOM wrappers, provider trees, and styling infrastructure all get captured as Figma frames, creating deep nesting with meaningless names.
+
+**Diagnosis:**
+```bash
+get_metadata(fileKey: "...", nodeId: "[captured frame]")
+# Check: How many nesting levels? Are names meaningful?
+# Bad: 10+ levels, names like "Container", "View", "css-1a2b3c"
+# Good: 3 levels, names like "card", "card-title", "field-input"
+```
+
+**Recovery: Clean HTML Re-capture**
+
+1. Screenshot the messy capture for visual reference
+2. Get design context (colors, fonts, spacing) from the existing frame
+3. Create a minimal flat HTML file (max 3 levels of nesting)
+4. Use semantic class names (they become Figma layer names)
+5. Include the Figma capture script
+6. Serve locally and re-capture
+
+**Full workflow:** See [figma/prompts/code-to-canvas-workflow.md](../../figma/prompts/code-to-canvas-workflow.md)
+
+**Prevention:**
+- **Never** capture directly from framework apps — always create flat HTML first
+- **Always** set a fixed viewport meta tag
+- **Always** use semantic class names on every element
+- **Always** use incognito mode to avoid browser extension artifacts
+
+**Time Impact:**
+- Clean HTML creation: 15-30 minutes
+- Re-capture: 5 minutes
+- vs. trying to manually fix messy capture: 1-2 hours (and still bad)
+
+---
+
 **Source:** Historical project analysis + official Figma MCP capabilities
 **Last Updated:** 2026-02-18
-**Patterns Count:** 8 (common failure modes and recovery strategies)
+**Patterns Count:** 9 (common failure modes and recovery strategies)
