@@ -12,13 +12,13 @@ You are working with Fede's design system. Follow these rules strictly.
 ## Component Usage
 
 ### Before Creating Anything
-1. Run `get_local_components` (via `figma-edit` MCP) to see available components
+1. Run `get_local_components` (via Figma MCP) to see available components
 2. Check if a component already exists for what you need
-3. Use `create_component_instance` (via `figma-edit` MCP) instead of raw shapes
+3. Use `create_component_instance` (via Figma MCP) instead of raw shapes
 
 ### Finding Components
 ```
-// Get all local components (via figma-edit MCP)
+// Get all local components (via Figma MCP)
 get_local_components
 
 // Look for naming patterns like:
@@ -46,7 +46,7 @@ get_local_components
 ## Colors
 
 Use design tokens, not raw hex values. Reference:
-- `get_styles` (via `figma-edit` MCP) to see available color styles
+- `get_styles` (via Figma MCP) to see available color styles
 - `get_variable_defs` (via `figma` MCP) to see design token definitions
 - Apply via component properties when possible
 

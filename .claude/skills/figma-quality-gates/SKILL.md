@@ -6,15 +6,15 @@ user-invocable: false
 
 # Figma Quality Gates Skill
 
-Mandatory quality checkpoints to prevent design failures when using figma-edit MCP.
+Mandatory quality checkpoints to prevent design failures when building with Figma MCP.
 
 ## Overview
 
-This skill enforces a 5-gate quality process discovered from the Capo project failure analysis. Each gate MUST pass before proceeding to the next stage.
+This skill enforces a 5-gate quality process based on lessons from past projects. Each gate MUST pass before proceeding to the next stage.
 
-**Source:** Lessons learned from [docs/design-failure-analysis.md](/Users/federicoostan/design-agent/docs/design-failure-analysis.md)
+**Source:** Lessons learned from historical project analysis and best practices
 
-**Target MCP:** `figma-edit` (Figma Desktop local MCP)
+**Target MCP:** Official Figma MCP (remote or desktop mode)
 
 ## The 5 Quality Gates
 
@@ -24,12 +24,12 @@ This skill enforces a 5-gate quality process discovered from the Capo project fa
 **Owner:** UI Specialist (or Orchestrator)
 
 #### Checklist
-- [ ] Verify which Figma MCP is available (figma-edit vs official)
+- [ ] Verify official Figma MCP is configured and accessible
 - [ ] Test basic operations (create frame, create rectangle, create text)
 - [ ] Test component instance creation
 - [ ] Test text update inside component instance
-- [ ] Test auto-layout support (if available)
-- [ ] Document limitations discovered
+- [ ] Test auto-layout support
+- [ ] Document any limitations discovered
 
 #### Testing Script
 See: [prompts/mcp-capability-test.md](./prompts/mcp-capability-test.md)

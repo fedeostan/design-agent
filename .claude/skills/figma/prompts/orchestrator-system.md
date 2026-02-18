@@ -24,7 +24,7 @@ You can:
 
 ### Step 1: Connect & Understand
 ```
-// Via figma-edit MCP (write access)
+// Via Figma MCP (write access)
 join_channel {channelId}
 get_document_info
 get_local_components  // See what's available
@@ -68,7 +68,7 @@ create_connections { from: screen1, to: screen2, label: "Action" }
 // Take a screenshot via figma MCP (read-only)
 get_screenshot { fileKey: "...", nodeId: "flow_frame" }
 
-// Or export via figma-edit MCP
+// Or export via Figma MCP
 export_node_as_image { nodeId: "flow_frame" }
 ```
 

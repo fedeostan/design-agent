@@ -6,17 +6,21 @@ user-invocable: false
 
 # Figma Orchestrator Skill
 
-Orchestrate Figma design creation via Claude CLI with two MCP servers.
+Orchestrate Figma design creation via Claude CLI with the official Figma MCP server.
 
 ## Architecture
 
 ```
 Claude CLI
-  ├── figma MCP (read-only)    → mcp.figma.com (remote, OAuth)
-  │     Screenshots, metadata, design context, variables, Code Connect
+  ├── Figma MCP (official)     → Remote or Desktop mode
+  │     Remote: mcp.figma.com (read-only, OAuth)
+  │     Desktop: localhost:3845 (read/write, requires Figma Desktop)
   │
-  ├── figma-edit MCP (write)   → Local Figma Desktop MCP
-  │     Create/edit frames, components, text, styling, auto-layout, export
+  │     Capabilities:
+  │     - Screenshots, metadata, design context
+  │     - Variables, Code Connect
+  │     - Create/edit frames, components, text, styling
+  │     - Auto-layout, export
   │
   ├── Atlassian MCP            → Jira & Confluence
   └── Asana MCP                → Task management
@@ -24,8 +28,7 @@ Claude CLI
 
 ## Important: Quality Gates
 
-**For reliability when using figma-edit MCP:**
-- ⚠️ The figma-edit MCP has known limitations (positioning bugs, text update workarounds)
+**For reliable Figma design work:**
 - ✅ **Always use quality gates** before building: See [figma-quality-gates/SKILL.md](../figma-quality-gates/SKILL.md)
 - ✅ **Run pre-flight tests:** See [figma-quality-gates/prompts/mcp-capability-test.md](../figma-quality-gates/prompts/mcp-capability-test.md)
 - ✅ **Error recovery:** See [figma-quality-gates/prompts/error-recovery-patterns.md](../figma-quality-gates/prompts/error-recovery-patterns.md)
@@ -40,26 +43,53 @@ Claude CLI
 
 ## Prerequisites
 
-1. **`figma` MCP** configured (remote, always available)
-2. **Figma Desktop** running with MCP plugin for `figma-edit`
-3. **Claude CLI** configured with both MCPs
+1. **Official Figma MCP** configured (remote or desktop mode)
+2. **Claude CLI** configured with Figma MCP
 
 ## Setup
 
-### 1. Install `figma` MCP (Read-Only)
+### 1. Install Official Figma MCP
+
+**For read-only operations (remote mode):**
 ```bash
-claude mcp add --transport http figma https://mcp.figma.com/mcp
+# Install via npm package
+claude mcp add figma -- npx -y @modelcontextprotocol/server-figma
+
+# OR configure manually in .mcp/config.json:
+{
+  "figma": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-figma"],
+    "env": {
+      "FIGMA_PERSONAL_ACCESS_TOKEN": "${FIGMA_PERSONAL_ACCESS_TOKEN}"
+    }
+  }
+}
+
 # Authenticates via OAuth on first use
 ```
 
-### 2. Install `figma-edit` MCP (Write)
-Requires Figma Desktop app with the MCP plugin running:
-1. Open Figma Desktop
-2. Run the MCP plugin (Plugins → MCP)
-3. The local MCP server connects automatically
-4. Verify: `claude mcp list | grep figma-edit`
+**For read/write operations (desktop mode):**
+```bash
+# Requires Figma Desktop app running
+# Desktop server runs automatically at http://127.0.0.1:3845/mcp
+# Requires Dev or Full seat on paid Figma plan
 
-### 3. Other MCPs (when ready)
+# Configure in .mcp/config.json:
+{
+  "figma": {
+    "url": "http://127.0.0.1:3845/mcp"
+  }
+}
+```
+
+**Verification:**
+```bash
+claude mcp list | grep figma
+# Should show: figma - configured
+```
+
+### 2. Other MCPs (optional)
 ```bash
 # Atlassian MCP
 claude mcp add atlassian -- npx @anthropic-ai/mcp-atlassian
@@ -70,37 +100,47 @@ claude mcp add asana -- npx @anthropic-ai/mcp-asana
 
 ## Tool Reference
 
-### `figma` MCP (Read-Only)
+### Official Figma MCP Tools
+
+**Read Operations** (available in both remote and desktop modes):
 | Tool | Purpose |
 |------|---------|
+| `get_file` | Get Figma file metadata and structure |
 | `get_screenshot` | Capture screenshots of frames/nodes |
 | `get_metadata` | Read node structure, properties, styles |
 | `get_design_context` | Generate code context from designs |
-| `get_variable_defs` | Extract design tokens and variables |
-| `get_code_connect_map` | View Code Connect mappings |
-| `get_code_connect_suggestions` | Get automated mapping suggestions |
-| `add_code_connect_map` | Add Code Connect mapping |
-| `send_code_connect_mappings` | Publish Code Connect mappings |
-| `generate_diagram` | Create FigJam diagrams from Mermaid |
-| `get_figjam` | Read FigJam boards |
-
-### `figma-edit` MCP (Write)
-| Tool | Purpose |
-|------|---------|
-| `join_channel` | Connect to Figma Desktop session |
+| `get_node` / `get_nodes` | Get specific node(s) information |
 | `get_document_info` | Get document structure |
+| `get_selection` | Get currently selected nodes (desktop only) |
 | `get_local_components` | List available local components |
 | `get_remote_components` | List available library components |
 | `get_styles` | List available styles |
+| `get_variable_defs` | Extract design tokens and variables |
+| `get_code_connect_map` | View Code Connect mappings |
+| `get_code_connect_suggestions` | Get automated mapping suggestions |
+| `generate_diagram` | Create FigJam diagrams from Mermaid |
+| `get_figjam` | Read FigJam boards |
+
+**Write Operations** (desktop mode only):
+| Tool | Purpose |
+|------|---------|
 | `create_frame` | Create new frames |
 | `create_component_instance` | Instantiate components |
 | `create_text` | Create text nodes |
-| `create_rectangle/ellipse/polygon/star` | Create shapes |
+| `create_rectangle` / `create_ellipse` / `create_polygon` / `create_star` | Create shapes |
+| `create_component_from_node` | Convert node to component |
 | `set_auto_layout` | Configure auto-layout |
-| `set_fill_color/stroke_color` | Set colors |
-| `set_text_content/font_size/font_name` | Edit text |
-| `move_node/resize_node/clone_node/delete_node` | Manipulate nodes |
+| `set_fill_color` / `set_stroke_color` | Set colors |
+| `set_effects` / `set_corner_radius` | Set styling |
+| `set_text_content` / `set_font_size` / `set_font_name` / `set_font_weight` | Edit text |
+| `move_node` / `resize_node` / `clone_node` / `delete_node` | Manipulate nodes |
+| `insert_child` / `group_nodes` / `ungroup_nodes` | Manage hierarchy |
+| `rename_node` | Rename nodes |
 | `export_node_as_image` | Export assets |
+| `add_code_connect_map` | Add Code Connect mapping |
+| `send_code_connect_mappings` | Publish Code Connect mappings |
+
+**Note:** Exact tool names may vary. Use MCP introspection to discover available tools.
 
 ## Custom Constraints
 

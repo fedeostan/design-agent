@@ -23,7 +23,7 @@ Two creative specialists who collaborate through constructive debate to produce 
 - Read: `.claude/skills/figma/prompts/flow-style.md`
 - Read: `.claude/skills/figma/prompts/annotation-style.md`
 
-**Tool Access:** Uses `figma` MCP (read-only) for reviewing designs — `get_screenshot`, `get_metadata`, `get_design_context`
+**Tool Access:** Uses official Figma MCP (read-only) for reviewing designs — `get_screenshot`, `get_metadata`, `get_design_context`
 
 **How You Work:**
 1. Propose screen structure, flow logic, and interaction patterns
@@ -90,13 +90,13 @@ Two creative specialists who collaborate through constructive debate to produce 
 - Read: `.claude/skills/figma/prompts/annotation-style.md`
 - Read: `.claude/skills/figma/prompts/flow-style.md`
 
-**Tool Access:** Uses `figma` MCP (read-only) for reviewing designs + `figma-edit` MCP (write) for building screens
+**Tool Access:** Uses official Figma MCP (read-only for reviewing designs, desktop mode for building screens)
 
 **How You Work:**
 1. Review UX proposals and translate them into visual design
 2. Select appropriate components from the design system
 3. Define visual hierarchy through typography, color, and spacing
-4. Build the actual Figma screens using `figma-edit` component instances
+4. Build the actual Figma screens using component instances
 5. Ensure design system consistency across all screens
 6. Add Design and Dev notes to every screen
 
