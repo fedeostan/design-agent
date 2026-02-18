@@ -90,11 +90,19 @@ For a full feature design, run this sequence:
 - If a stage produces open questions, resolve them before continuing
 - The pipeline can be entered at any stage (e.g., skip PM if brief already exists)
 
+### Text-to-Figma Pipeline
+For automated text-to-Figma conversion, use the `/text-to-figma` skill which runs a 9-stage pipeline:
+Pre-Flight → PM → Research → UX+UI Debate → Token Sync → HTML Gen → Playwright Capture → Post-Capture QA → Binding Checklist
+
+**Skill:** `.claude/skills/text-to-figma/SKILL.md`
+
 ### Quick Task Shortcuts
 - **"Quick wireframe for X"** → UX subagent directly (skip PM, skip team debate)
 - **"Build this screen in Figma"** → UI subagent directly
 - **"Evaluate this design"** → Research subagent directly
 - **"Prepare handoff for devs"** → Solution Architect directly
+- **"Design X from text"** → Text-to-Figma pipeline (full 9 stages)
+- **"Capture this HTML in Figma"** → Text-to-Figma pipeline from Stage 6
 
 ---
 
@@ -149,6 +157,7 @@ Read: `.claude/skills/figma/prompts/flow-style.md`
 | Requirements | `.claude/skills/requirements/SKILL.md` | Design briefs, user stories, acceptance criteria |
 | Handoff | `.claude/skills/handoff/SKILL.md` | Implementation specs, Code Connect, design tokens |
 | Skill Generation | `.claude/skills/skill-generation/SKILL.md` | Convert errors into skills (`/skill-from-error`) |
+| Text-to-Figma | `.claude/skills/text-to-figma/SKILL.md` | End-to-end text → Figma pipeline (`/text-to-figma`) |
 
 ## Important Rules
 

@@ -135,6 +135,24 @@ The `figmaselector=body` parameter ensures only the `<body>` element is captured
 **CRITICAL — Open in incognito / private window:**
 Browser extensions (Grammarly, password managers, ad blockers) inject DOM nodes that become phantom 0-width/0-height frames in Figma. Always capture in an incognito window with extensions disabled. If you cannot open incognito programmatically, warn the user to do so manually.
 
+### 2.5a Automated Capture with Playwright
+
+If Playwright MCP tools are available, automate the capture instead of opening a browser manually.
+
+**Critical:** Resize the viewport BEFORE navigating — Playwright's default viewport (1280x720) gets baked into the page layout at navigation time.
+
+```
+1. browser_close()                           # Clean session, no extensions
+2. browser_resize(width: 390, height: 844)   # MUST be before navigate
+3. browser_navigate(url: "http://localhost:8080/<file>.html#figmacapture=<ID>&figmaendpoint=<ENDPOINT>&figmadelay=1000&figmaselector=body")
+4. browser_wait_for(time: 3000)              # Wait for capture submission
+5. browser_take_screenshot()                 # Verify it worked
+```
+
+**Fallback:** If Playwright is unavailable, use the manual flow in 2.5 above.
+
+See also: `.claude/skills/text-to-figma/prompts/playwright-capture.md` for full procedure and troubleshooting.
+
 ### 2.6 Verify Capture
 
 ```
@@ -300,6 +318,7 @@ Even with clean HTML, expect these issues:
 7. **Capture with browser extensions active** — Grammarly, password managers, etc. inject phantom 0x0 frames
 8. **Omit `display: flex` on containers** — results in frames without auto-layout (not responsive)
 9. **Use approximate color values** — always use exact token values so Phase 3 binding is straightforward
+10. **Navigate before resizing in Playwright** — the viewport at navigation time determines the layout. Always `browser_resize()` BEFORE `browser_navigate()`
 
 ---
 

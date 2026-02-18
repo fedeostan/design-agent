@@ -77,7 +77,25 @@ Central index of all skills for the Design Agent system.
 
 ---
 
-### 5. Meta-Skills
+### 5. Pipeline Skills
+**Domain:** End-to-end design pipelines
+**When to Use:** Full text-to-Figma workflows, automated capture, post-capture QA
+
+| Skill | Purpose | Key Files | Owner |
+|-------|---------|-----------|-------|
+| **Text-to-Figma** | 9-stage pipeline from text to Figma screens | `text-to-figma/SKILL.md` + 4 prompts | Orchestrator |
+
+**Command:** `/text-to-figma` (invokes full pipeline)
+
+**Sub-Prompts:**
+- `text-to-figma/prompts/pre-flight.md` - Stage 0 prerequisites (6 checks, blocks pipeline)
+- `text-to-figma/prompts/playwright-capture.md` - Automated Playwright capture (viewport fix)
+- `text-to-figma/prompts/post-capture-verification.md` - 5-check quality gate
+- `text-to-figma/prompts/binding-checklist-template.md` - Phase 3 variable/component binding
+
+---
+
+### 6. Meta-Skills
 **Domain:** Workflow improvement and error learning
 **When to Use:** Capturing errors, generating new skills
 
@@ -116,6 +134,11 @@ Central index of all skills for the Design Agent system.
 | [Earlier] | Research | `research/SKILL.md` | Initial setup | ✅ Active |
 | [Earlier] | Requirements | `requirements/SKILL.md` | Initial setup | ✅ Active |
 | [Earlier] | Handoff | `handoff/SKILL.md` | Initial setup | ✅ Active |
+| 2026-02-18 | Text-to-Figma Pipeline | `text-to-figma/SKILL.md` | Capo pipeline test | ✅ Active |
+| 2026-02-18 | Pre-Flight Checklist | `text-to-figma/prompts/pre-flight.md` | Capo pipeline test | ✅ Active |
+| 2026-02-18 | Playwright Capture | `text-to-figma/prompts/playwright-capture.md` | Capo 500px bug | ✅ Active |
+| 2026-02-18 | Post-Capture Verification | `text-to-figma/prompts/post-capture-verification.md` | Capo QA gaps | ✅ Active |
+| 2026-02-18 | Binding Checklist | `text-to-figma/prompts/binding-checklist-template.md` | Capo binding gaps | ✅ Active |
 
 **Status Legend:**
 - ✅ Active - Currently in use
