@@ -2,50 +2,44 @@
 
 When things go wrong during Figma design work, follow these recovery patterns.
 
-**Purpose:** Recover from common figma-edit MCP failures
-**Source:** Lessons from Capo project + known MCP limitations
+**Purpose:** Recover from common Figma MCP issues and limitations
+**Source:** Lessons from past projects + official Figma MCP capabilities
 
 ---
 
-## Pattern 1: Wrong MCP Installed
+## Pattern 1: MCP Capability Limitations
 
 **Symptoms:**
-- Limited functionality (no auto-layout, no connectors)
-- Positioning bugs
-- Community/third-party package name visible
-- Requires WebSocket server and channel ID auth
+- Limited functionality
+- Unexpected errors during design operations
+- Features work differently than expected
+- Operations fail silently
 
 **Diagnosis:**
-Check which MCP is configured:
+Verify your Figma MCP configuration:
 ```bash
-# If using third-party MCP, you'll see:
-# - Package name like "claude-talk-to-figma-mcp"
-# - Local WebSocket address (localhost:3055)
-# - Desktop app dependency
+# Check which MCP is installed
+claude mcp list | grep figma
 
-# Official MCP shows:
-# - URL: https://mcp.figma.com/mcp
-# - OAuth authentication
-# - Works in browser Figma
+# Should show official Figma MCP:
+# figma - https://mcp.figma.com/mcp (remote)
+# OR
+# figma - http://127.0.0.1:3845/mcp (desktop)
 ```
 
 **Recovery:**
 
-**Option 1: Switch to Official MCP (Recommended)**
-```bash
-# Install official Figma MCP
-claude mcp add --transport http figma https://mcp.figma.com/mcp
+**Option 1: Verify MCP Setup**
+1. Confirm official Figma MCP is installed
+2. Test connection to Figma file
+3. Verify authentication is working
+4. Check MCP server logs for errors
 
-# Verify installation
-claude mcp list | grep figma
-# Should show: figma (http) - https://mcp.figma.com/mcp
-```
-
-**Option 2: Work with Current MCP (If switching not possible)**
+**Option 2: Test Capabilities**
 1. Document all limitations discovered in Gate 1
 2. Use quality gates to test each capability
 3. Apply workarounds from other patterns
-4. Accept longer build time due to manual adjustments
+4. Adjust build approach based on available features
 
 **Option 3: Manual Figma Work**
 - Build component library programmatically
@@ -247,7 +241,7 @@ get_local_components()  # Find newly created component
 - Error: "auto-layout not supported"
 - Children don't reflow when added
 
-**Diagnosis:** figma-edit MCP doesn't support auto-layout (common limitation)
+**Diagnosis:** Auto-layout may not be fully supported or configured correctly
 
 **Recovery:**
 
@@ -309,7 +303,7 @@ Provides some responsive behavior without full auto-layout.
 - Screens built but not connected visually
 - Flow documentation missing
 
-**Diagnosis:** figma-edit MCP doesn't support connector creation
+**Diagnosis:** Connector/arrow creation may not be available via MCP
 
 **Recovery:**
 
@@ -359,7 +353,7 @@ create_polygon(points: [[0,0], [10,5], [0,10]], ...)
 - Component always renders in default state
 - Property override UI not available in MCP
 
-**Diagnosis:** figma-edit MCP doesn't support variant switching or property overrides
+**Diagnosis:** Component variant switching or property overrides may not be supported
 
 **Recovery:**
 
@@ -414,31 +408,32 @@ Create:
 - Need to match existing screens
 - `get_screenshot` or `get_metadata` fails
 - "Unauthorized" or "Not found" errors
-- Wrong MCP for reading (figma-edit is write-only)
+- Authentication issues
 
-**Diagnosis:** figma-edit MCP may be write-only; need read-capable MCP
+**Diagnosis:** MCP authentication or file access permissions issue
 
-**Solution:** Use Official Figma MCP for Reading
+**Solution:** Verify Official Figma MCP Setup
 
 ```bash
-# Reading designs (use official figma MCP):
+# Ensure official Figma MCP is configured
+claude mcp list | grep figma
+
+# Test file access with a known file URL
+# Reading designs:
 get_screenshot(nodeId: "123:456", fileKey: "abc...")
 get_metadata(nodeId: "123:456", fileKey: "abc...")
 get_design_context(nodeId: "123:456", fileKey: "abc...")
 
-# Writing designs (use figma-edit MCP):
+# Writing designs (desktop mode):
 create_frame(...)
 create_component_instance(...)
 ```
 
-**MCP Architecture:**
-- **`figma` MCP** (https://mcp.figma.com/mcp) — Read-only, OAuth
-- **`figma-edit` MCP** (local desktop) — Write-only (or limited read)
-
-**Use both MCPs together:**
-1. Read existing designs with official MCP (get_screenshot, get_metadata)
-2. Create new designs with figma-edit MCP (create_frame, etc.)
-3. Read created designs with official MCP to verify
+**Authentication Check:**
+1. Verify Figma MCP authentication (OAuth for remote, desktop app running for local)
+2. Confirm file access permissions in Figma
+3. Test with a simple file read operation
+4. Check MCP server logs for auth errors
 
 ---
 
@@ -488,6 +483,6 @@ If stuck:
 
 ---
 
-**Source:** Capo project failure analysis + figma-edit MCP limitations
-**Last Updated:** 2026-02-17
-**Patterns Count:** 8 (all known failure modes from Capo)
+**Source:** Historical project analysis + official Figma MCP capabilities
+**Last Updated:** 2026-02-18
+**Patterns Count:** 8 (common failure modes and recovery strategies)

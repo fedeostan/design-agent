@@ -1,24 +1,24 @@
 # Positioning Validation Script
 
-Detect absolute vs relative coordinate bugs in figma-edit MCP.
+Detect absolute vs relative coordinate positioning issues in Figma MCP.
 
-**Purpose:** Catch Capo positioning bug before building all screens
+**Purpose:** Catch positioning bugs before building all screens
 **Duration:** 2-3 minutes
 **Owner:** UI Specialist
 **When:** After building first screen (Gate 3)
 
 ---
 
-## The Bug Pattern (from Capo failure)
+## Common Positioning Issues
 
 **Symptom:** Child elements positioned off-canvas, far from parent frame
 
-**Example from Capo Auth/Login-Loading:**
+**Historical Example:**
 - Parent frame at `x: 1100, y: 0`
 - Child logo at `x: 2355, y: 100` (should be ~1255)
 - Offset: `2355 - 1100 = 1255` (exactly the parent's x position!)
 
-**Root cause:** figma-edit MCP uses absolute canvas coordinates for children instead of parent-relative coordinates
+**Root cause:** Some MCP implementations may use absolute canvas coordinates for children instead of parent-relative coordinates
 
 **Impact:** Elements render far off-screen, completely unusable
 
@@ -81,12 +81,12 @@ get_node_info(nodeId: [child node ID])
 
 ## Bug Diagnosis
 
-| Actual Child Position | Diagnosis | Capo Bug? |
-|----------------------|-----------|-----------|
+| Actual Child Position | Diagnosis | Issue Present? |
+|----------------------|-----------|----------------|
 | x: 1050, y: 550 | ✅ **Correct** - MCP handles parent-relative positioning | No |
-| x: 50, y: 50 | ❌ **Bug Type 1** - MCP uses relative as absolute | Yes |
-| x: 2050, y: 1050 | ❌ **Bug Type 2** - MCP double-adds parent position | Yes (variant) |
-| Off-canvas far away | ❌ **Bug Type 3** - Coordinate system completely broken | Yes (severe) |
+| x: 50, y: 50 | ❌ **Type 1** - MCP uses relative as absolute | Yes |
+| x: 2050, y: 1050 | ❌ **Type 2** - MCP double-adds parent position | Yes (variant) |
+| Off-canvas far away | ❌ **Type 3** - Coordinate system completely broken | Yes (severe) |
 
 ---
 
@@ -223,24 +223,24 @@ create_rectangle(
 
 ---
 
-## Real-World Example: Capo Auth/Login
+## Historical Example: Auth/Login Screen
 
-**What happened:**
+**What happened in a past project:**
 - Frame created at `x: 0, y: 0` ✅
 - Logo created at `x: 155, y: 80` (relative)
 - **Expected position:** `x: 155, y: 80` (since parent at origin)
 - **Actual position:** `x: 155, y: 80` ✅ (correct because parent at 0, 0)
 
-**But for Auth/Login-Loading:**
+**But for second screen:**
 - Frame created at `x: 1100, y: 0`
 - Logo created at `x: 155, y: 80` (relative)
 - **Expected position:** `x: 1255, y: 80` (parent 1100 + relative 155)
-- **Actual position:** `x: 2355, y: 100` ❌ (Bug Type 2: double-added parent x)
+- **Actual position:** `x: 2355, y: 100` ❌ (Type 2: double-added parent x)
 
 **Lesson:** Bug not caught because first screen was at origin (0, 0). Should have tested with non-origin frame.
 
 ---
 
-**Source:** [docs/design-failure-analysis.md](../../../docs/design-failure-analysis.md) (lines 51-60, 239-250)
-**Last Updated:** 2026-02-17
-**Validated With:** Capo project failure (Auth/Login-Loading positioning bug)
+**Source:** Historical project analysis
+**Last Updated:** 2026-02-18
+**Target:** Official Figma MCP positioning validation

@@ -30,8 +30,9 @@ You (Orchestrator / CLAUDE.md)
 
 ## Available Tools
 
-- **`figma` MCP** (read-only, remote OAuth) — Screenshots, metadata, design context, variables, Code Connect, FigJam diagrams
-- **`figma-edit` MCP** (write, local Figma Desktop) — Create/edit frames, components, text, styling, auto-layout, export
+- **Figma MCP** (official) — Complete design operations (remote for read-only, desktop for read/write)
+  - Screenshots, metadata, design context, variables, Code Connect, FigJam diagrams
+  - Create/edit frames, components, text, styling, auto-layout, export
 - **Atlassian MCP** — Jira tickets, Confluence pages
 - **Notion MCP** — Pages and databases for requirements
 - **Asana MCP** — Task management

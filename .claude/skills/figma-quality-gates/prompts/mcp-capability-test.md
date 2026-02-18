@@ -1,10 +1,10 @@
 # Figma MCP Capability Test Script
 
-Run this script to validate figma-edit MCP before starting work.
+Run this script to validate official Figma MCP before starting work.
 
-**Purpose:** Prevent Capo-style failures by testing MCP capabilities upfront
+**Purpose:** Prevent design failures by testing MCP capabilities upfront
 **Duration:** 2-3 minutes
-**Target:** figma-edit MCP (Figma Desktop local plugin)
+**Target:** Official Figma MCP (remote or desktop mode)
 
 ---
 
@@ -43,7 +43,7 @@ create_rectangle(
 **Result:** ✅ Pass / ❌ Fail
 **Position Check:** Is rectangle at correct position inside frame? ✅/❌
 
-**Note:** If rectangle appears far off-canvas, this is the Capo positioning bug.
+**Note:** If rectangle appears far off-canvas, document this as a positioning issue.
 
 ---
 
@@ -106,7 +106,7 @@ set_text_content(
 )
 ```
 
-**Method B: Find child text node (Capo workaround)**
+**Method B: Find child text node (alternative approach)**
 ```bash
 # 1. Get instance node info
 get_node_info(nodeId: [instance node ID])
@@ -224,32 +224,34 @@ List workarounds for limitations:
 
 ---
 
-## figma-edit MCP Known Issues (from Capo)
+## Common Figma MCP Issues
 
-Based on Capo project failure analysis:
+Potential issues you may encounter (based on historical projects):
 
-1. **Positioning Bug:**
-   - Children use absolute canvas coords instead of parent-relative
-   - Workaround: Calculate parent offset, adjust child positions
+1. **Positioning:**
+   - Children may use absolute canvas coordinates instead of parent-relative
+   - Workaround: Test positioning first, adjust calculations if needed
 
-2. **Text Update:**
-   - Direct instance text update doesn't work
+2. **Text Updates:**
+   - Direct instance text update may not work
    - Workaround: Use Method B (find child text node by ID)
 
-3. **No Auto-Layout:**
-   - `set_auto_layout` command doesn't exist or does nothing
-   - Workaround: Manual absolute positioning with 8px grid
+3. **Auto-Layout:**
+   - May not be fully supported depending on MCP version/mode
+   - Workaround: Manual absolute positioning with 8px grid if needed
 
-4. **No Connectors:**
-   - Cannot create flow arrows programmatically
+4. **Flow Connectors:**
+   - Programmatic arrow creation may not be available
    - Workaround: Add arrows manually in Figma UI afterward
 
 5. **Component Variants:**
-   - Cannot switch variants programmatically
+   - Variant switching may not be supported
    - Workaround: Create instance of specific variant directly (e.g., "Button/Outline")
+
+**Note:** The official Figma MCP desktop mode should have better support for these features than third-party implementations.
 
 ---
 
-**Source:** [docs/design-failure-analysis.md](../../../docs/design-failure-analysis.md)
-**Last Updated:** 2026-02-17
-**Validated With:** figma-edit MCP (Figma Desktop plugin)
+**Source:** Historical project analysis and best practices
+**Last Updated:** 2026-02-18
+**Target:** Official Figma MCP
